@@ -6,7 +6,7 @@ import {
   TextInputProps,
   TextProps,
   TextStyle,
-  TouchableOpacityProps,
+  PressableProps,
   ViewStyle,
 } from "react-native";
 
@@ -107,7 +107,7 @@ export interface InputProps extends TextInputProps {
   //   error?: string;
 }
 
-export interface CustomButtonProps extends TouchableOpacityProps {
+export interface CustomButtonProps extends PressableProps {
   style?: ViewStyle;
   onPress?: () => void;
   loading?: boolean;

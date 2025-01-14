@@ -1,11 +1,18 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { Stack } from "expo-router";
 
 const RootLayout = () => {
   return (
-    <View>
-      <Text>RootLayout</Text>
-    </View>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        statusBarBackgroundColor: "transparent",
+        navigationBarTranslucent: true,
+        navigationBarColor: "transparent",
+      }}
+    >
+      <Stack.Screen name="index" />
+      <Stack.Screen name="(auth)/welcome" />
+    </Stack>
   );
 };
 
