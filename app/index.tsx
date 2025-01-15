@@ -6,7 +6,7 @@ import { colors } from "@/constants/theme";
 const SplashScreen = () => {
   useEffect(() => {
     setTimeout(() => {
-      router.push("/(auth)/welcome");
+      router.replace("/welcome");
     }, 2000);
   }, []);
   return (

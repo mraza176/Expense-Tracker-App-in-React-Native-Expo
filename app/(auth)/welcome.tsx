@@ -5,6 +5,7 @@ import Typo from "@/components/Typo";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
 import Button from "@/components/Button";
+import { router } from "expo-router";
 
 const WelcomeScreen = () => {
   return (
@@ -12,6 +13,7 @@ const WelcomeScreen = () => {
       <View style={styles.container}>
         <View>
           <Pressable
+            onPress={() => router.push("/login")}
             style={({ pressed }) => [
               pressed && { opacity: 0.75 },
               styles.loginButton,
@@ -59,7 +61,7 @@ const WelcomeScreen = () => {
               .damping(12)}
             style={styles.buttonContainer}
           >
-            <Button>
+            <Button onPress={() => router.push("/register")}>
               <Typo size={22} color={colors.neutral900} fontWeight="600">
                 Get Started
               </Typo>

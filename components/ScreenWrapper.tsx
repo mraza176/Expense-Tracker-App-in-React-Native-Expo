@@ -1,4 +1,4 @@
-import { View, Dimensions, Platform, StatusBar } from "react-native";
+import { View, Dimensions, Platform } from "react-native";
 import { ScreenWrapperProps } from "@/types";
 import { colors } from "@/constants/theme";
 
@@ -13,7 +13,6 @@ const ScreenWrapper = ({ style, children }: ScreenWrapperProps) => {
         style,
       ]}
     >
-      <StatusBar barStyle="light-content" />
       {children}
     </View>
   );
