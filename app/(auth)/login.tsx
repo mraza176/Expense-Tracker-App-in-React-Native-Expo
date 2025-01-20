@@ -9,21 +9,30 @@ import BackButton from "@/components/BackButton";
 import Typo from "@/components/Typo";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+import { useAuth } from "@/contexts/authContext";
 
 const LoginScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
 
   const emailRef = useRef("");
   const passwordRef = useRef("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!emailRef.current || !passwordRef.current) {
       Alert.alert("Login", "Please fill all the fields", [{ text: "OK" }], {
         userInterfaceStyle: "dark",
       });
       return;
     }
-    console.log({ email: emailRef.current, password: passwordRef.current });
+    setIsLoading(true);
+    const res = await login(emailRef.current, passwordRef.current);
+    setIsLoading(false);
+    if (!res.success) {
+      Alert.alert("Login", res.msg, [{ text: "OK" }], {
+        userInterfaceStyle: "dark",
+      });
+    }
   };
   return (
     <ScreenWrapper>

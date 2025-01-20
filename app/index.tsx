@@ -1,14 +1,7 @@
-import { useEffect } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import { router } from "expo-router";
 import { colors } from "@/constants/theme";
 
 const SplashScreen = () => {
-  useEffect(() => {
-    setTimeout(() => {
-      router.replace("/welcome");
-    }, 2000);
-  }, []);
   return (
     <View style={styles.container}>
       <Image

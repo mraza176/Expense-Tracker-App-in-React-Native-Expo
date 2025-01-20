@@ -9,20 +9,34 @@ import BackButton from "@/components/BackButton";
 import Typo from "@/components/Typo";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+import { useAuth } from "@/contexts/authContext";
 
 const RegisterScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const { register } = useAuth();
 
   const nameRef = useRef("");
   const emailRef = useRef("");
   const passwordRef = useRef("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!nameRef.current || !emailRef.current || !passwordRef.current) {
       Alert.alert("Sign up", "Please fill all the fields", [{ text: "OK" }], {
         userInterfaceStyle: "dark",
       });
       return;
+    }
+    setIsLoading(true);
+    const res = await register(
+      nameRef.current,
+      emailRef.current,
+      passwordRef.current
+    );
+    setIsLoading(false);
+    if (!res.success) {
+      Alert.alert("Sign up", res.msg, [{ text: "OK" }], {
+        userInterfaceStyle: "dark",
+      });
     }
   };
   return (
