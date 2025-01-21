@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Alert, Pressable, StyleSheet, View } from "react-native";
 import { router } from "expo-router";
-import * as Icons from "phosphor-react-native";
+import { At, Lock } from "phosphor-react-native";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
@@ -53,17 +53,13 @@ const LoginScreen = () => {
           <Input
             placeholder="Enter your email"
             onChangeText={(text) => (emailRef.current = text)}
-            icon={
-              <Icons.At size={verticalScale(26)} color={colors.neutral300} />
-            }
+            icon={<At size={verticalScale(26)} color={colors.neutral300} />}
           />
           <Input
             placeholder="Enter your password"
             secureTextEntry
             onChangeText={(text) => (passwordRef.current = text)}
-            icon={
-              <Icons.Lock size={verticalScale(26)} color={colors.neutral300} />
-            }
+            icon={<Lock size={verticalScale(26)} color={colors.neutral300} />}
           />
           <Typo size={14} style={{ alignSelf: "flex-end" }}>
             Forgot Password?

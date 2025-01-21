@@ -1,10 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
+import ScreenWrapper from "@/components/ScreenWrapper";
+import Typo from "@/components/Typo";
 
 const WalletScreen = () => {
   return (
-    <View>
-      <Text>WalletScreen</Text>
-    </View>
+    <ScreenWrapper>
+      <Typo>WalletScreen</Typo>
+    </ScreenWrapper>
   );
 };
 
