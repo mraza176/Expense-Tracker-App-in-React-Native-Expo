@@ -1,6 +1,10 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import { Alert, Pressable, StyleSheet, View } from "react-native";
+import { router } from "expo-router";
 import { Image } from "expo-image";
 import { CaretRight, GearSix, Lock, Power, User } from "phosphor-react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import { signOut } from "firebase/auth";
+import { auth } from "@/config/firebaseConfig";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
 import { accountOptionType } from "@/types";
@@ -39,6 +43,34 @@ const ProfileScreen = () => {
       bgColor: "#e11d48",
     },
   ];
+
+  const handleLogout = async () => {
+    await signOut(auth);
+  };
+
+  const showLogoutAlert = () => {
+    Alert.alert("Confirm", "Are you sure you want to logout?", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("cancel logout"),
+        style: "cancel",
+      },
+      {
+        text: "Logout",
+        onPress: handleLogout,
+        style: "destructive",
+      },
+    ]);
+  };
+
+  const handlePress = (item: accountOptionType) => {
+    if (item.title === "Logout") {
+      showLogoutAlert();
+    }
+
+    if (item.routeName) router.push(item.routeName);
+  };
+
   return (
     <ScreenWrapper>
       <View style={styles.container}>
@@ -64,12 +96,19 @@ const ProfileScreen = () => {
         <View style={styles.accountOptions}>
           {accountOptions.map((item, index) => {
             return (
-              <View style={styles.listItem}>
+              <Animated.View
+                key={index.toString()}
+                entering={FadeInDown.delay(index * 50)
+                  .springify()
+                  .damping(14)}
+                style={styles.listItem}
+              >
                 <Pressable
                   style={({ pressed }) => [
                     pressed && { opacity: 0.75 },
                     styles.flexRow,
                   ]}
+                  onPress={() => handlePress(item)}
                 >
                   <View
                     style={[styles.listIcon, { backgroundColor: item.bgColor }]}
@@ -85,7 +124,7 @@ const ProfileScreen = () => {
                     color={colors.white}
                   />
                 </Pressable>
-              </View>
+              </Animated.View>
             );
           })}
         </View>

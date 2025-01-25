@@ -6,6 +6,7 @@ const RootLayout = () => {
     <AuthProvider>
       <Stack
         screenOptions={{
+          animation: "slide_from_right",
           headerShown: false,
           statusBarBackgroundColor: "transparent",
           navigationBarTranslucent: true,
@@ -15,6 +16,7 @@ const RootLayout = () => {
         <Stack.Screen name="index" />
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(modals)" />
       </Stack>
     </AuthProvider>
   );
