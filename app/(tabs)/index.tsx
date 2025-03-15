@@ -1,6 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { router } from "expo-router";
 import { MagnifyingGlass, Plus } from "phosphor-react-native";
+import { limit, orderBy, where } from "firebase/firestore";
 import { useAuth } from "@/contexts/authContext";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
@@ -9,9 +10,22 @@ import Typo from "@/components/Typo";
 import HomeCard from "@/components/HomeCard";
 import TransactionList from "@/components/TransactionList";
 import Button from "@/components/Button";
+import useFetchData from "@/hooks/useFetchData";
+import { TransactionType } from "@/types";
 
 const HomeScreen = () => {
   const { user } = useAuth();
+
+  const {
+    data: recentTransactions,
+    loading,
+    error,
+  } = useFetchData<TransactionType>("transactions", [
+    where("uid", "==", user?.uid),
+    orderBy("date", "desc"),
+    limit(30),
+  ]);
+
   return (
     <ScreenWrapper>
       <View style={styles.container}>
@@ -21,7 +35,7 @@ const HomeScreen = () => {
               Hello,
             </Typo>
             <Typo size={20} fontWeight="500">
-              {user?.name}
+              {user?.name || "-----"}
             </Typo>
           </View>
           <Pressable
@@ -45,8 +59,8 @@ const HomeScreen = () => {
             <HomeCard />
           </View>
           <TransactionList
-            data={[1, 2, 3, 4, 5, 6]}
-            loading={false}
+            data={recentTransactions}
+            loading={loading}
             emptyListMessage="No Transactions Added Yet!"
             title="Recent Transactions"
           />

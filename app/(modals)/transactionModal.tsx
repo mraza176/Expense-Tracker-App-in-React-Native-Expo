@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -6,7 +6,6 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
@@ -17,7 +16,7 @@ import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { scale, verticalScale } from "@/utils/styling";
 import { TransactionType, WalletType } from "@/types";
 import { useAuth } from "@/contexts/authContext";
-import { createOrUpdateWallet, deleteWallet } from "@/services/walletService";
+import { deleteWallet } from "@/services/walletService";
 import { expenseCategories, transactionTypes } from "@/constants/data";
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -30,6 +29,7 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 import ImageUpload from "@/components/ImageUpload";
 import useFetchData from "@/hooks/useFetchData";
+import { createOrUpdateTransaction } from "@/services/transactionService";
 
 const TransactionModal = () => {
   const { user } = useAuth();
@@ -83,7 +83,14 @@ const TransactionModal = () => {
 
     const transactionData: TransactionType = { ...transaction, uid: user?.uid };
 
-    console.log(transactionData);
+    setLoading(true);
+    const res = await createOrUpdateTransaction(transactionData);
+    setLoading(false);
+    if (res.success) {
+      router.back();
+    } else {
+      Alert.alert("Error", res.msg);
+    }
   };
 
   const showDeleteAlert = () => {
