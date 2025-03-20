@@ -1,8 +1,13 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { router } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 import { Timestamp } from "firebase/firestore";
-import { TransactionItemProps, TransactionListType } from "@/types";
+import {
+  TransactionItemProps,
+  TransactionListType,
+  TransactionType,
+} from "@/types";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
 import { expenseCategories, incomeCategory } from "@/constants/data";
@@ -67,7 +72,22 @@ const TransactionItem = ({
   );
 };
 
-const handleClick = () => {};
+const handleClick = (item: TransactionType) => {
+  router.push({
+    pathname: "/(modals)/transactionModal",
+    params: {
+      id: item?.id,
+      type: item?.type,
+      amount: item?.amount.toString(),
+      category: item?.category,
+      date: (item?.date as Timestamp)?.toDate().toISOString(),
+      description: item?.description,
+      image: item?.image,
+      uid: item?.uid,
+      walletId: item?.walletId,
+    },
+  });
+};
 
 const TransactionList = ({
   data,

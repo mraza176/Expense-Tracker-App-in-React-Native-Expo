@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -29,7 +29,10 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 import ImageUpload from "@/components/ImageUpload";
 import useFetchData from "@/hooks/useFetchData";
-import { createOrUpdateTransaction } from "@/services/transactionService";
+import {
+  createOrUpdateTransaction,
+  deleteTransaction,
+} from "@/services/transactionService";
 
 const TransactionModal = () => {
   const { user } = useAuth();
@@ -54,7 +57,19 @@ const TransactionModal = () => {
     orderBy("created", "desc"),
   ]);
 
-  const oldTransaction = useLocalSearchParams();
+  type paramType = {
+    id: string;
+    type: string;
+    amount: string;
+    category?: string;
+    date: string;
+    description?: string;
+    image?: any;
+    uid?: string;
+    walletId: string;
+  };
+
+  const oldTransaction: paramType = useLocalSearchParams();
 
   const onDateChange = (
     _event: DateTimePickerEvent,
@@ -65,13 +80,18 @@ const TransactionModal = () => {
     setShowDatePicker(false);
   };
 
-  // useEffect(() => {
-  //   if (oldTransaction?.id)
-  //     setTransaction({
-  //       name: oldTransaction.name as string,
-  //       image: oldTransaction.image,
-  //     });
-  // }, []);
+  useEffect(() => {
+    if (oldTransaction?.id)
+      setTransaction({
+        type: oldTransaction?.type,
+        amount: Number(oldTransaction?.amount),
+        description: oldTransaction?.description || "",
+        category: oldTransaction?.category || "",
+        date: new Date(oldTransaction?.date),
+        walletId: oldTransaction?.walletId,
+        image: oldTransaction?.image,
+      });
+  }, []);
 
   const onSubmit = async () => {
     const { type, amount, description, category, date, walletId, image } =
@@ -81,7 +101,18 @@ const TransactionModal = () => {
       return;
     }
 
-    const transactionData: TransactionType = { ...transaction, uid: user?.uid };
+    const transactionData: TransactionType = {
+      type,
+      amount,
+      description,
+      category,
+      date,
+      walletId,
+      image: image ? image : null,
+      uid: user?.uid,
+    };
+
+    if (oldTransaction?.id) transactionData.id = oldTransaction.id;
 
     setLoading(true);
     const res = await createOrUpdateTransaction(transactionData);
@@ -96,7 +127,7 @@ const TransactionModal = () => {
   const showDeleteAlert = () => {
     Alert.alert(
       "Confirm",
-      "Are you sure you want to do this?\nThis will remove all the transactions related to this wallet",
+      "Are you sure you want to delete this transaction?",
       [
         { text: "CANCEL", style: "cancel" },
         {
@@ -105,7 +136,10 @@ const TransactionModal = () => {
           onPress: async () => {
             if (!oldTransaction.id) return;
             setLoading(true);
-            const res = await deleteWallet(oldTransaction?.id as string);
+            const res = await deleteTransaction(
+              oldTransaction?.id,
+              oldTransaction?.walletId
+            );
             setLoading(false);
             if (res.success) {
               router.back();
