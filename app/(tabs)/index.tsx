@@ -43,6 +43,7 @@ const HomeScreen = () => {
               pressed && { opacity: 0.75 },
               styles.searchIcon,
             ]}
+            onPress={() => router.push("/(modals)/searchModal")}
           >
             <MagnifyingGlass
               size={verticalScale(22)}
