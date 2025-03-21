@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Expense-Tracker",
+    "name": "Expense Tracker",
     "slug": "Expense-Tracker",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,7 +20,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#171717"
-      }
+      },
+      "package": "com.mraza.expensetracker"
     },
     "web": {
       "bundler": "metro",
@@ -41,6 +42,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "9536f8d6-f373-46fe-bf3e-b6320d0a9615"
+      }
     }
   }
 }
