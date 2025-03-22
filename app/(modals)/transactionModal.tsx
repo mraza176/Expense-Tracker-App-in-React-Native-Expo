@@ -10,13 +10,13 @@ import {
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { Trash } from "phosphor-react-native";
-import { Dropdown } from "react-native-element-dropdown";
+// import { Dropdown } from "react-native-element-dropdown";
+import { Picker } from "@react-native-picker/picker";
 import { orderBy, where } from "firebase/firestore";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { scale, verticalScale } from "@/utils/styling";
 import { TransactionType, WalletType } from "@/types";
 import { useAuth } from "@/contexts/authContext";
-import { deleteWallet } from "@/services/walletService";
 import { expenseCategories, transactionTypes } from "@/constants/data";
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -170,7 +170,7 @@ const TransactionModal = () => {
               <Typo color={colors.neutral200} size={16}>
                 Transaction Type
               </Typo>
-              <Dropdown
+              {/* <Dropdown
                 style={styles.dropDownContainer}
                 activeColor={colors.neutral700}
                 selectedTextStyle={styles.dropDownSelectedText}
@@ -186,13 +186,31 @@ const TransactionModal = () => {
                 onChange={(item) =>
                   setTransaction({ ...transaction, type: item.value })
                 }
-              />
+              /> */}
+              <Picker
+                style={{ color: "white" }}
+                selectedValue={transaction.type}
+                onValueChange={(value, index) =>
+                  setTransaction({ ...transaction, type: value })
+                }
+                dropdownIconColor="white"
+                mode="dropdown"
+              >
+                <Picker.Item
+                  label={transactionTypes[0].label}
+                  value={transactionTypes[0].value}
+                />
+                <Picker.Item
+                  label={transactionTypes[1].label}
+                  value={transactionTypes[1].value}
+                />
+              </Picker>
             </View>
             <View style={styles.inputContainer}>
               <Typo color={colors.neutral200} size={16}>
                 Wallet *
               </Typo>
-              <Dropdown
+              {/* <Dropdown
                 style={styles.dropDownContainer}
                 activeColor={colors.neutral700}
                 placeholderStyle={styles.dropDownPlaceholder}
@@ -213,14 +231,31 @@ const TransactionModal = () => {
                 onChange={(item) =>
                   setTransaction({ ...transaction, walletId: item.value })
                 }
-              />
+              /> */}
+              <Picker
+                style={{ color: "white" }}
+                selectedValue={transaction.walletId}
+                onValueChange={(value, index) =>
+                  setTransaction({ ...transaction, walletId: value })
+                }
+                dropdownIconColor="white"
+                mode="dropdown"
+              >
+                {wallets?.map((wallet, index) => (
+                  <Picker.Item
+                    key={index}
+                    label={`${wallet?.name} (Rs ${wallet?.amount})`}
+                    value={wallet?.id}
+                  />
+                ))}
+              </Picker>
             </View>
             {transaction.type === "expense" && (
               <View style={styles.inputContainer}>
                 <Typo color={colors.neutral200} size={16}>
                   Expense Category *
                 </Typo>
-                <Dropdown
+                {/* <Dropdown
                   style={styles.dropDownContainer}
                   activeColor={colors.neutral700}
                   placeholderStyle={styles.dropDownPlaceholder}
@@ -238,7 +273,24 @@ const TransactionModal = () => {
                   onChange={(item) =>
                     setTransaction({ ...transaction, category: item.value })
                   }
-                />
+                /> */}
+                <Picker
+                  style={{ color: "white" }}
+                  selectedValue={transaction.category}
+                  onValueChange={(value, index) =>
+                    setTransaction({ ...transaction, category: value })
+                  }
+                  dropdownIconColor="white"
+                  mode="dropdown"
+                >
+                  {Object.values(expenseCategories)?.map((category, index) => (
+                    <Picker.Item
+                      key={index}
+                      label={category.label}
+                      value={category.value}
+                    />
+                  ))}
+                </Picker>
               </View>
             )}
             <View style={styles.inputContainer}>

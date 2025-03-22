@@ -1,6 +1,7 @@
-import { upload } from "cloudinary-react-native";
-import { cld } from "@/config/cloudinaryConfig";
+import axios from "axios";
 import { ResponseType } from "@/types";
+
+const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${process.env.EXPO_PUBLIC_CLOUD_NAME}/image/upload`;
 
 export const uploadFileToCloudinary = async (
   file: { uri?: string } | string,
@@ -11,26 +12,25 @@ export const uploadFileToCloudinary = async (
 
     if (typeof file === "string") return { success: true, data: file };
 
-    let url: string | undefined;
-
     if (file && file.uri) {
-      await upload(cld, {
-        file: file.uri,
-        options: {
-          folder: folderName,
-          unique_filename: true,
-          allowed_formats: ["png", "jpg", "jpeg"],
-        },
-        callback: async (error, result) => {
-          if (error) {
-            throw new Error("Failed to upload image");
-          } else {
-            url = result?.secure_url;
-          }
+      const formData = new FormData();
+      formData.append("file", {
+        uri: file?.uri,
+        type: "image/jpeg",
+        name: file?.uri?.split("/").pop() || "image.jpg",
+      } as any);
+      formData.append("upload_preset", process.env.EXPO_PUBLIC_CLOUD_PRESET!);
+      formData.append("folder", folderName);
+
+      const response = await axios.post(CLOUDINARY_UPLOAD_URL, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
       });
+
+      return { success: true, data: response.data.secure_url };
     }
-    return { success: true, data: url };
+    return { success: true };
   } catch (error: any) {
     return { success: false, msg: error.message || "Failed to upload image" };
   }
